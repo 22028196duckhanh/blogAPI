@@ -84,3 +84,13 @@ class UserResponse(BaseModel):
                 "email": "jdoe@example.com"
             }
         }
+        
+class TokenData(BaseModel):
+    id: str = Field(...)
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "id": "60c72b2f9b1e8a001f8e4b22"
+            }
+        }
