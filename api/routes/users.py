@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException, status
 from ..schemas import UserCreate, db, UserResponse
 from fastapi.encoders import jsonable_encoder
 from ..utils import get_password_hash
+from ..send_email import send_email
 import secrets
 
 router = APIRouter(
@@ -29,5 +30,14 @@ async def registration(user_info: UserCreate):
     
     new_user = await db["users"].insert_one(user_info)
     created_user = await db["users"].find_one({"_id": new_user.inserted_id})
+    
+    await send_email(
+        subject="Welcome to DailyBlog",
+        recipient=user_info["email"],
+        body={
+            "name": user_info["name"],
+            "title": "Account Created Successfully",
+        }
+    )
     
     return created_user
