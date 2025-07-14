@@ -10,6 +10,7 @@ from typing import Any
 from pydantic import GetJsonSchemaHandler
 from pydantic_core import core_schema
 from motor.motor_asyncio import AsyncIOMotorClient
+from datetime import datetime
 
 client = AsyncIOMotorClient(os.getenv("MONGODB_URL"))
 
@@ -106,11 +107,43 @@ class PasswordResetRequest(BaseModel):
         }
         
 class NewPassword(BaseModel):
-    new_password: str = Field(..., min_length=8)
+    new_password: str = Field(...)
 
     class Config:
         json_schema_extra = {
             "example": {
                 "new_password": "a_new_strong_password"
+            }
+        }
+        
+class BlogContentCreate(BaseModel):
+    title: str = Field(...)
+    content: str = Field(...)
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "title": "My First Blog Post",
+                "content": "This is the content of my first blog post."
+            }
+        }
+        
+class BlogContentResponse(BaseModel):
+    id: PyObjectId = Field(default_factory=PyObjectId, alias="_id")
+    title: str
+    content: str
+    author_id: str
+    author_name: str
+    created_at: datetime
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "id": "60c72b2f9b1e8a001f8e4b22",
+                "title": "My First Blog Post",
+                "content": "This is the content of my first blog post.",
+                "authorId": "60c72b2f9b1e8a001f8e4b22",
+                "authorName": "John Doe",
+                "createdAt": "2023-10-01T12:00:00Z"
             }
         }

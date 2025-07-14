@@ -1,8 +1,9 @@
 from jose import JWTError, jwt
 from datetime import datetime, timedelta
+from bson import ObjectId
 from dotenv import load_dotenv
 import os
-from .schemas import TokenData, db
+from .schemas import TokenData, db, UserInDB
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 
@@ -34,7 +35,7 @@ def verify_access_token(token: str, credentials_exception):
     except JWTError:
         raise credentials_exception
 
-def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(token: str = Depends(oauth2_scheme)) -> UserInDB:
     credentials_exception = HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail="Token is invalid or expired",
@@ -44,7 +45,7 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
     if result is None:
         raise credentials_exception
     current_user_id = result.id
-    current_user = db["users"].find_one({"_id": current_user_id})
+    current_user = await db["users"].find_one({"_id": ObjectId(current_user_id)})
     if current_user is None:
         raise credentials_exception
-    return current_user
+    return UserInDB(**current_user)

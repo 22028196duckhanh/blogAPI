@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from bson.objectid import ObjectId
 from ..schemas import PasswordResetRequest, db, NewPassword
-from ..oath2 import create_access_token, get_current_user, verify_access_token
+from ..oath2 import create_access_token, verify_access_token
 from ..send_email import send_password_reset_email
 from ..utils import get_password_hash
 
