@@ -94,3 +94,23 @@ class TokenData(BaseModel):
                 "id": "60c72b2f9b1e8a001f8e4b22"
             }
         }
+        
+class PasswordResetRequest(BaseModel):
+    email: EmailStr = Field(...)
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "email": "jdoe@example.com"
+            }
+        }
+        
+class NewPassword(BaseModel):
+    new_password: str = Field(..., min_length=8)
+
+    class Config:
+        json_schema_extra = {
+            "example": {
+                "new_password": "a_new_strong_password"
+            }
+        }

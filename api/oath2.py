@@ -40,7 +40,10 @@ def get_current_user(token: str = Depends(oauth2_scheme)):
         detail="Token is invalid or expired",
         headers={"WWW-Authenticate": "Bearer"},
     )
-    current_user_id = verify_access_token(token, credentials_exception).id
+    result = verify_access_token(token, credentials_exception)
+    if result is None:
+        raise credentials_exception
+    current_user_id = result.id
     current_user = db["users"].find_one({"_id": current_user_id})
     if current_user is None:
         raise credentials_exception
