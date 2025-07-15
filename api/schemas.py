@@ -2,7 +2,6 @@ from dotenv import load_dotenv
 load_dotenv()
 
 from bson import ObjectId
-from pkg_resources import load_entry_point
 import os
 from pydantic import BaseModel, Field, EmailStr
 
